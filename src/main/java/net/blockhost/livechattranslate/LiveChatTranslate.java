@@ -19,10 +19,12 @@ import org.json.JSONObject;
 
 public class LiveChatTranslate extends JavaPlugin implements Listener {
 
-    private final String API_KEY = "3a50084c-81be-e8f2-f4b3-3e13b29d4ab0:fx";
+    private String API_KEY;
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+        API_KEY = getConfig().getString("api_key");
         Bukkit.getPluginManager().registerEvents(this, this);
     }
 
