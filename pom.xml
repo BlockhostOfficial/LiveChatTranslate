@@ -6,7 +6,7 @@
 
     <groupId>net.blockhost</groupId>
     <artifactId>LiveChatTranslate</artifactId>
-    <version>0.0.1.1</version>
+    <version>0.0.2</version>
     <packaging>jar</packaging>
 
     <name>LiveChatTranslate</name>
@@ -72,18 +72,10 @@
             <version>1.19.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-        <!-- Retrofit -->
         <dependency>
-            <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>retrofit</artifactId>
-            <version>2.9.0</version>
-        </dependency>
-
-        <!-- Gson converter for Retrofit -->
-        <dependency>
-            <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>converter-gson</artifactId>
-            <version>2.9.0</version>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20210307</version>
         </dependency>
     </dependencies>
 </project>
