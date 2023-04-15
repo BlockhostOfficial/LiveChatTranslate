@@ -5,3 +5,29 @@ api-version: 1.19
 authors: [ qbasty ]
 description: Translate chat messages live to all the languages around the world!
 website: https://blockhost.net
+
+commands:
+  msg:
+    description: Send a private message to another player.
+    aliases: [dm, pm, whisper, w]
+  reply:
+    description: Reply to the last person you messaged or received a message from.
+    aliases: [r]
+  last:
+    description: Reply to the last person you messaged.
+    aliases: [l]
+  help:
+    description: Show help information.
+  discord:
+    description: Show Discord information.
+  reddit:
+    description: Show Reddit information.
+  shop:
+    description: Show shop information.
+    aliases: [store, buy, donate]
+  website:
+    description: Show website information.
+  twitter:
+    description: Show Twitter information.
+  youtube:
+    description: Show YouTube information.

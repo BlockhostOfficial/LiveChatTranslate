@@ -1,86 +1,99 @@
 package net.blockhost.livechattranslate;
 
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+public class LiveChatTranslate extends JavaPlugin {
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-public class LiveChatTranslate extends JavaPlugin implements Listener {
-
-    private String API_KEY;
+    private Translations translations;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        API_KEY = getConfig().getString("api_key");
-        Bukkit.getPluginManager().registerEvents(this, this);
-    }
 
-    @EventHandler
-    public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
-        Player player = event.getPlayer();
-        String message = event.getMessage();
-        String playerLocale = player.getLocale();
+        if (getConfig().getBoolean("enable-chat-translations")) {
+            translations = new Translations(this);
+            Bukkit.getPluginManager().registerEvents(translations, this);
+        }
 
-        for (Player recipient : event.getRecipients()) {
-            String recipientLocale = recipient.getLocale();
-            if (playerLocale.startsWith("es_") && recipientLocale.startsWith("en_")) {
-                String translatedMessage = translateMessage(message, "ES", "EN");
-                recipient.sendMessage(String.format("<%s> %s", player.getDisplayName(), translatedMessage));
-            } else if (playerLocale.startsWith("en_") && recipientLocale.startsWith("es_")) {
-                String translatedMessage = translateMessage(message, "EN", "ES");
-                recipient.sendMessage(String.format("<%s> %s", player.getDisplayName(), translatedMessage));
-            } else {
-                recipient.sendMessage(String.format("<%s> %s", player.getDisplayName(), message));
+        boolean enablePms = getConfig().getBoolean("enable-pms");
+        if (enablePms) {
+            PrivateMessages privateMessages = new PrivateMessages(this, translations);
+            ReplyMessages replyMessages = new ReplyMessages(this, privateMessages);
+
+            if (getConfig().getBoolean("pms-command-msg")) {
+                getCommand("msg").setExecutor(privateMessages);
+                getCommand("msg").setTabCompleter(privateMessages);
+            }
+            if (getConfig().getBoolean("pms-command-dm")) {
+                getCommand("dm").setExecutor(privateMessages);
+                getCommand("dm").setTabCompleter(privateMessages);
+            }
+            if (getConfig().getBoolean("pms-command-pm")) {
+                getCommand("pm").setExecutor(privateMessages);
+                getCommand("pm").setTabCompleter(privateMessages);
+            }
+            if (getConfig().getBoolean("pms-command-whisper")) {
+                getCommand("whisper").setExecutor(privateMessages);
+                getCommand("whisper").setTabCompleter(privateMessages);
+            }
+            if (getConfig().getBoolean("pms-command-w")) {
+                getCommand("w").setExecutor(privateMessages);
+                getCommand("w").setTabCompleter(privateMessages);
+            }
+
+            if (getConfig().getBoolean("enable-reply")) {
+                getCommand("reply").setExecutor(replyMessages);
+                getCommand("reply").setTabCompleter(replyMessages);
+            }
+            if (getConfig().getBoolean("enable-command-r")) {
+                getCommand("r").setExecutor(replyMessages);
+                getCommand("r").setTabCompleter(replyMessages);
+            }
+
+            if (getConfig().getBoolean("enable-last")) {
+                getCommand("last").setExecutor(replyMessages);
+                getCommand                ("last").setTabCompleter(replyMessages);
+            }
+            if (getConfig().getBoolean("enable-command-l")) {
+                getCommand("l").setExecutor(replyMessages);
+                getCommand("l").setTabCompleter(replyMessages);
             }
         }
 
-        event.setCancelled(true);
-    }
+        TextCommands textCommands = new TextCommands(this);
 
-
-    private String translateMessage(String message, String sourceLang, String targetLang) {
-        try {
-            URL url = new URL("https://api-free.deepl.com/v2/translate");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestProperty("Authorization", "DeepL-Auth-Key " + API_KEY);
-            connection.setDoOutput(true);
-
-            String postData = String.format("text=%s&source_lang=%s&target_lang=%s", message, sourceLang, targetLang);
-            try (OutputStream os = connection.getOutputStream()) {
-                byte[] input = postData.getBytes(StandardCharsets.UTF_8);
-                os.write(input, 0, input.length);
-            }
-
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
-                StringBuilder response = new StringBuilder();
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
-                }
-
-                JSONObject responseObject = new JSONObject(response.toString());
-                JSONArray translations = responseObject.getJSONArray("translations");
-                return translations.getJSONObject(0).getString("text");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return message;
+        if (getConfig().getBoolean("enable-help-command")) {
+            getCommand("help").setExecutor(textCommands);
         }
+        if (getConfig().getBoolean("enable-discord-command")) {
+            getCommand("discord").setExecutor(textCommands);
+        }
+        if (getConfig().getBoolean("enable-reddit-command")) {
+            getCommand("reddit").setExecutor(textCommands);
+        }
+        if (getConfig().getBoolean("enable-shop-command")) {
+            getCommand("shop").setExecutor(textCommands);
+            if (getConfig().getBoolean("enable-store-alias")) {
+                getCommand("store").setExecutor(textCommands);
+            }
+            if (getConfig().getBoolean("enable-buy-alias")) {
+                getCommand("buy").setExecutor(textCommands);
+            }
+            if (getConfig().getBoolean("enable-donate-alias")) {
+                getCommand("donate").setExecutor(textCommands);
+            }
+        }
+        if (getConfig().getBoolean("enable-website-command")) {
+            getCommand("website").setExecutor(textCommands);
+        }
+        if (getConfig().getBoolean("enable-twitter-command")) {
+            getCommand("twitter").setExecutor(textCommands);
+        }
+        if (getConfig().getBoolean("enable-youtube-command")) {
+            getCommand("youtube").setExecutor(textCommands);
+        }
+
+
     }
 }

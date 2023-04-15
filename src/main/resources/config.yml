@@ -1,1 +1,165 @@
-api_key: "your-api-key-here"
+#----------------------------------------------------
+#                LIVE TRANSLATIONS
+#----------------------------------------------------
+
+# Enable translations .
+enable-chat-translations: false #true OR false
+
+# DeepL API:
+deepl_api_key_free: "your-api-key-here"
+deepl_api_key_pro: "your-api-key-here"
+
+# NOT WORKING
+# Google API:
+google_api_key: "your-api-key-here"
+
+# NOT WORKING
+# Yandex API:
+yandex_api_key: "your-api-key-here"
+
+# NOT WORKING
+# Microsoft API
+microsoft_api_key: "your-api-key-here"
+
+# API Chances and Permissions:
+# Chances for API usage of different platforms, all of them must be in total 100.
+# Set the unused ones to 0.
+chance_deepl_free: 100
+chance_deepl_pro: 0
+chance_google: 5 # NOT WORKING
+chance_yandex: 20 # NOT WORKING
+chance_microsoft: 20 # NOT WORKING
+
+# Language is detected with DeepL API
+# Languages to translate from:
+From-English: true
+From-Spanish: true
+From-Polish: true
+From-French: true
+From-German: true
+From-Russian: true
+From-Ukrainian: true
+From-Portuguese: true
+From-Japanese: true
+From-Greek: true
+From-Turkish: true
+From-Indonesian: true
+
+# Player's language is detected with their client language
+# and in that language they will receive messages
+# Languages to translate to:
+To-English: true
+To-Spanish: true
+To-Polish: true
+To-French: true
+To-German: true
+To-Russian: true
+To-Ukrainian: true
+To-Portuguese: true
+To-Japanese: true
+To-Greek: true
+To-Turkish: true
+To-Indonesian: true
+
+# The messages of players with this permission will not be translated
+from-bypass-perm-enabled: false
+from-bypass-perm: "livechattranslate.bypass.from"
+
+# The players with this permission will receive all the messages in the original language without any changes
+to-bypass-perm-enabled: false
+to-bypass-perm: "livechattranslate.bypass.to"
+
+#----------------------------------------------------
+#                   CHAT FORMAT
+#----------------------------------------------------
+
+# This option cannot be disabled.
+chat-format: "<%player%> %message%"
+
+#----------------------------------------------------
+#                   Private Messages
+#----------------------------------------------------
+
+# Enables the private messages
+enable-pms: false
+
+enable-pms-translations: false
+
+# Select which command you want to enable, all of them do the same thing:
+# /msg <user> <message> is the same as /dm <user> <message>
+pms-command-msg: true # Enables the command /msg
+pms-command-dm: false # Enables the command /dm
+pms-command-pm: false # Enables the command /pm
+pms-command-whisper: false # Enables the command /whisper
+pms-command-w: false # Enables the command /w
+
+pms-format: 2 # 1 or 2
+
+pms-format-1: "%1% messaged %2%: %message"
+
+pms-format-2-sender: "You messaged %player%: %message%"
+pms-format-2-receiver: "%player% messaged you: %message%"
+
+# Usage message
+pms-usage-message: "Usage: /msg <user> <message>"
+
+# Player not found message, this message is used for /msg, /reply and /last
+player-not-found-message: "Player not found."
+
+
+
+
+# Reply command
+# You reply to the last person that you messaged OR that messaged you.
+enable-reply: true # Enables /reply <message>
+enable-command-r: true # Enables the alias /r <message>
+
+reply-usage-message: "Usage: /reply <message>"
+
+
+no-one-to-reply-message: "&cYou don't have anyone to reply to."
+player-offline-message: "&cThe player you're trying to reply to is no longer online."
+
+#Last command
+# With last command, you will reply to the last person you messaged,
+# Not the last person that messaged you
+enable-last: true # Enables /last <message>
+enable-command-l: true # Enables the alias /l <message>
+
+last-usage-message: "Usage: /last <message>"
+
+#----------------------------------------------------
+#                   Text Commands
+#----------------------------------------------------
+
+enable-help-command: true
+help-command: "&cHelp: &elink here"
+
+enable-discord-command: true
+discord-command: "&cDiscord: &elink here"
+
+enable-reddit-command: true
+reddit-command: "&cReddit: &elink here"
+
+enable-shop-command: true
+enable-store-alias: true
+enable-buy-alias: true
+enable-donate-alias: true
+shop-command: "&cShop: &elink here"
+
+enable-website-command: true
+website-command: "&cWebsite: &elink here"
+
+enable-twitter-command: true
+twitter-command: "&cTwitter: &elink here"
+
+enable-youtube-command: true
+youtube-command: "&cYouTube: &elink here"
+
+
+#----------------------------------------------------
+#                   Cache
+#----------------------------------------------------
+
+
+enable-translation-cache: true
