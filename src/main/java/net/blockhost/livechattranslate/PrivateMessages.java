@@ -109,6 +109,8 @@ public class PrivateMessages implements CommandExecutor, TabCompleter {
         boolean shouldTranslateFrom = fromBypassPermEnabled ? !sender.hasPermission(fromBypassPerm) : true;
         boolean shouldTranslateTo = toBypassPermEnabled ? !target.hasPermission(toBypassPerm) : true;
 
+        String translatedMessage = message;
+
         if (enablePmsTranslations && (shouldTranslateFrom || shouldTranslateTo)) {
             String senderLocale = sender.getLocale();
             String targetLocale = target.getLocale();
@@ -117,17 +119,18 @@ public class PrivateMessages implements CommandExecutor, TabCompleter {
 
             if (!sourceLang.isEmpty() && !targetLang.isEmpty() && !sourceLang.equals(targetLang)) {
                 // Use the translation cache to translate the message
-                message = translations.translateMessageWithCache(message, sourceLang, targetLang);
+                translatedMessage = translations.translateMessageWithCache(message, sourceLang, targetLang);
             }
         }
 
         if (pmsFormat == 1) {
-            String formattedMessage = pmsFormat1.replace("%1%", sender.getDisplayName()).replace("%2%", target.getDisplayName()).replace("%message%", message);
-            sender.sendMessage(formattedMessage);
-            target.sendMessage(formattedMessage);
+            String formattedMessageSender = pmsFormat1.replace("%1%", sender.getDisplayName()).replace("%2%", target.getDisplayName()).replace("%message%", message);
+            String formattedMessageTarget = pmsFormat1.replace("%1%", sender.getDisplayName()).replace("%2%", target.getDisplayName()).replace("%message%", translatedMessage);
+            sender.sendMessage(formattedMessageSender);
+            target.sendMessage(formattedMessageTarget);
         } else if (pmsFormat == 2) {
             sender.sendMessage(pmsFormat2Sender.replace("%player%", target.getDisplayName()).replace("%message%", message));
-            target.sendMessage(pmsFormat2Receiver.replace("%player%", sender.getDisplayName()).replace("%message%", message));
+            target.sendMessage(pmsFormat2Receiver.replace("%player%", sender.getDisplayName()).replace("%message%", translatedMessage));
         }
 
         setLastReplied(sender.getUniqueId(), target.getUniqueId());

@@ -1,6 +1,7 @@
 package net.blockhost.livechattranslate;
 
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class LiveChatTranslate extends JavaPlugin {
@@ -10,6 +11,9 @@ public class LiveChatTranslate extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
+
+        AntiSpam antiSpam = new AntiSpam(this);
+        getServer().getPluginManager().registerEvents(antiSpam, this);
 
         if (getConfig().getBoolean("enable-chat-translations")) {
             translations = new Translations(this);

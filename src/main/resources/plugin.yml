@@ -5,6 +5,7 @@ api-version: 1.19
 authors: [ qbasty ]
 description: Translate chat messages live to all the languages around the world!
 website: https://blockhost.net
+folia-supported: true
 
 commands:
   msg:

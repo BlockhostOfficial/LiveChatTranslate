@@ -208,8 +208,13 @@ public class Translations implements Listener {
 
         String translatedMessage = translateMessageWithoutCache(message, sourceLang, targetLang);
         translationCache.put(cacheKey, translatedMessage);
+
+        // Log cache usage and translation details
+        plugin.getLogger().info(String.format("Caching translation: %s (%s) -> %s (%s): %s", message, sourceLang, translatedMessage, targetLang, cacheKey));
+
         return translatedMessage;
     }
+
 
     // New method for translating messages without the cache
     private String translateMessageWithoutCache(String message, String sourceLang, String targetLang) {
