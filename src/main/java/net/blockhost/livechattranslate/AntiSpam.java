@@ -42,11 +42,12 @@ public class AntiSpam implements Listener {
         }
     }
 
-    private boolean canSendMessage(Player player) {
+    public boolean canSendMessage(Player player) {
         return canPerformAction(player, lastMessageTimestamps, MESSAGE_COOLDOWN_MS);
     }
 
-    private boolean canExecuteCommand(Player player) {
+
+    public boolean canExecuteCommand(Player player) {
         return canPerformAction(player, lastCommandTimestamps, COMMAND_COOLDOWN_MS);
     }
 

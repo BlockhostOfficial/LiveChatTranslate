@@ -28,10 +28,13 @@ public class PrivateMessages implements CommandExecutor, TabCompleter {
     private String fromBypassPerm;
     private boolean toBypassPermEnabled;
     private String toBypassPerm;
+    private AntiSpam antiSpam;
 
-    public PrivateMessages(LiveChatTranslate plugin, Translations translations) {
+
+    public PrivateMessages(LiveChatTranslate plugin, Translations translations, AntiSpam antiSpam) {
         this.plugin = plugin;
         this.translations = translations;
+        this.antiSpam = antiSpam;
         pmsFormat = plugin.getConfig().getInt("pms-format");
         pmsFormat1 = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("pms-format-1"));
         pmsFormat2Sender = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("pms-format-2-sender"));
@@ -57,6 +60,11 @@ public class PrivateMessages implements CommandExecutor, TabCompleter {
 
         if (args.length < 2) {
             sender.sendMessage(usageMessage);
+            return true;
+        }
+
+        if (!antiSpam.canSendMessage((Player) sender)) {
+            sender.sendMessage("You must wait 5 seconds between chat messages.");
             return true;
         }
 

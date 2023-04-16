@@ -16,14 +16,13 @@ public class LiveChatTranslate extends JavaPlugin {
         getServer().getPluginManager().registerEvents(antiSpam, this);
 
         if (getConfig().getBoolean("enable-chat-translations")) {
-            translations = new Translations(this);
-            Bukkit.getPluginManager().registerEvents(translations, this);
+            getServer().getPluginManager().registerEvents(new Translations(this, antiSpam), this);
         }
 
         boolean enablePms = getConfig().getBoolean("enable-pms");
         if (enablePms) {
-            PrivateMessages privateMessages = new PrivateMessages(this, translations);
-            ReplyMessages replyMessages = new ReplyMessages(this, privateMessages);
+            PrivateMessages privateMessages = new PrivateMessages(this, translations, antiSpam);
+            ReplyMessages replyMessages = new ReplyMessages(this, privateMessages, antiSpam);
 
             if (getConfig().getBoolean("pms-command-msg")) {
                 getCommand("msg").setExecutor(privateMessages);

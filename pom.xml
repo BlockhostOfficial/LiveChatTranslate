@@ -6,7 +6,7 @@
 
     <groupId>net.blockhost</groupId>
     <artifactId>LiveChatTranslate</artifactId>
-    <version>0.0.3.2</version>
+    <version>0.0.3.3</version>
     <packaging>jar</packaging>
 
     <name>LiveChatTranslate</name>

@@ -61,8 +61,12 @@ public class Translations implements Listener {
 
     private boolean enableTranslationCache;
 
-    public Translations(LiveChatTranslate plugin) {
+    private AntiSpam antiSpam;
+
+
+    public Translations(LiveChatTranslate plugin, AntiSpam antiSpam) {
         this.plugin = plugin;
+        this.antiSpam = antiSpam;
 
         API_KEY_DEEPL_FREE = plugin.getConfig().getString("deepl_api_key_free");
         API_KEY_DEEPL_PRO = plugin.getConfig().getString("deepl_api_key_pro");
@@ -107,84 +111,88 @@ public class Translations implements Listener {
 
     @EventHandler
     public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
-        Player player = event.getPlayer();
-        String message = event.getMessage();
-        String playerLocale = player.getLocale();
+        if (!antiSpam.canSendMessage(event.getPlayer())) {
+            Player player = event.getPlayer();
+            String message = event.getMessage();
+            String playerLocale = player.getLocale();
 
-        boolean shouldTranslateFrom = fromBypassPermEnabled ? !player.hasPermission(fromBypassPerm) : true;
+            boolean shouldTranslateFrom = fromBypassPermEnabled ? !player.hasPermission(fromBypassPerm) : true;
 
-        for (Player recipient : event.getRecipients()) {
-            String recipientLocale = recipient.getLocale();
-            String sourceLang = "";
-            String targetLang = "";
+            for (Player recipient : event.getRecipients()) {
+                String recipientLocale = recipient.getLocale();
+                String sourceLang = "";
+                String targetLang = "";
 
-            boolean shouldTranslateTo = toBypassPermEnabled ? !recipient.hasPermission(toBypassPerm) : true;
+                boolean shouldTranslateTo = toBypassPermEnabled ? !recipient.hasPermission(toBypassPerm) : true;
 
-            // Set source language based on the player's locale
-            if (fromEnglish && playerLocale.startsWith("en_")) {
-                sourceLang = "EN";
-            } else if (fromSpanish && playerLocale.startsWith("es_")) {
-                sourceLang = "ES";
-            } else if (fromPolish && playerLocale.startsWith("pl_")) {
-                sourceLang = "PL";
-            } else if (fromFrench && playerLocale.startsWith("fr_")) {
-                sourceLang = "FR";
-            } else if (fromGerman && playerLocale.startsWith("de_")) {
-                sourceLang = "DE";
-            } else if (fromRussian && playerLocale.startsWith("ru_")) {
-                sourceLang = "RU";
-            } else if (fromUkrainian && playerLocale.startsWith("uk_")) {
-                sourceLang = "UK";
-            } else if (fromPortuguese && playerLocale.startsWith("pt_")) {
-                sourceLang = "PT";
-            } else if (fromJapanese && playerLocale.startsWith("ja_")) {
-                sourceLang = "JA";
-            } else if (fromGreek && playerLocale.startsWith("el_")) {
-                sourceLang = "EL";
-            } else if (fromTurkish && playerLocale.startsWith("tr_")) {
-                sourceLang = "TR";
-            } else if (fromIndonesian && playerLocale.startsWith("in_")) {
-                sourceLang = "ID";
+                // Set source language based on the player's locale
+                if (fromEnglish && playerLocale.startsWith("en_")) {
+                    sourceLang = "EN";
+                } else if (fromSpanish && playerLocale.startsWith("es_")) {
+                    sourceLang = "ES";
+                } else if (fromPolish && playerLocale.startsWith("pl_")) {
+                    sourceLang = "PL";
+                } else if (fromFrench && playerLocale.startsWith("fr_")) {
+                    sourceLang = "FR";
+                } else if (fromGerman && playerLocale.startsWith("de_")) {
+                    sourceLang = "DE";
+                } else if (fromRussian && playerLocale.startsWith("ru_")) {
+                    sourceLang = "RU";
+                } else if (fromUkrainian && playerLocale.startsWith("uk_")) {
+                    sourceLang = "UK";
+                } else if (fromPortuguese && playerLocale.startsWith("pt_")) {
+                    sourceLang = "PT";
+                } else if (fromJapanese && playerLocale.startsWith("ja_")) {
+                    sourceLang = "JA";
+                } else if (fromGreek && playerLocale.startsWith("el_")) {
+                    sourceLang = "EL";
+                } else if (fromTurkish && playerLocale.startsWith("tr_")) {
+                    sourceLang = "TR";
+                } else if (fromIndonesian && playerLocale.startsWith("in_")) {
+                    sourceLang = "ID";
+                }
+                // Set target language based on the recipient's locale
+                if (toEnglish && recipientLocale.startsWith("en_")) {
+                    targetLang = "EN";
+                } else if (toSpanish && recipientLocale.startsWith("es_")) {
+                    targetLang = "ES";
+                } else if (toPolish && recipientLocale.startsWith("pl_")) {
+                    targetLang = "PL";
+                } else if (toFrench && recipientLocale.startsWith("fr_")) {
+                    targetLang = "FR";
+                } else if (toGerman && recipientLocale.startsWith("de_")) {
+                    targetLang = "DE";
+                } else if (toRussian && recipientLocale.startsWith("ru_")) {
+                    targetLang = "RU";
+                } else if (toUkrainian && recipientLocale.startsWith("uk_")) {
+                    targetLang = "UK";
+                } else if (toPortuguese && recipientLocale.startsWith("pt_")) {
+                    targetLang = "PT";
+                } else if (toJapanese && recipientLocale.startsWith("ja_")) {
+                    targetLang = "JA";
+                } else if (toGreek && recipientLocale.startsWith("el_")) {
+                    targetLang = "EL";
+                } else if (toTurkish && recipientLocale.startsWith("tr_")) {
+                    targetLang = "TR";
+                } else if (toIndonesian && recipientLocale.startsWith("in_")) {
+                    targetLang = "ID";
+                }
+
+                String formattedMessage;
+                if (shouldTranslateFrom && shouldTranslateTo && !sourceLang.isEmpty() && !targetLang.isEmpty() && !sourceLang.equals(targetLang)) {
+                    String translatedMessage = translateMessage(message, sourceLang, targetLang);
+
+                    formattedMessage = CHAT_FORMAT.replace("%player%", player.getDisplayName()).replace("%message%", translatedMessage);
+                } else {
+                    formattedMessage = CHAT_FORMAT.replace("%player%", player.getDisplayName()).replace("%message%", message);
+                }
+                recipient.sendMessage(formattedMessage);
             }
-            // Set target language based on the recipient's locale
-            if (toEnglish && recipientLocale.startsWith("en_")) {
-                targetLang = "EN";
-            } else if (toSpanish && recipientLocale.startsWith("es_")) {
-                targetLang = "ES";
-            } else if (toPolish && recipientLocale.startsWith("pl_")) {
-                targetLang = "PL";
-            } else if (toFrench && recipientLocale.startsWith("fr_")) {
-                targetLang = "FR";
-            } else if (toGerman && recipientLocale.startsWith("de_")) {
-                targetLang = "DE";
-            } else if (toRussian && recipientLocale.startsWith("ru_")) {
-                targetLang = "RU";
-            } else if (toUkrainian && recipientLocale.startsWith("uk_")) {
-                targetLang = "UK";
-            } else if (toPortuguese && recipientLocale.startsWith("pt_")) {
-                targetLang = "PT";
-            } else if (toJapanese && recipientLocale.startsWith("ja_")) {
-                targetLang = "JA";
-            } else if (toGreek && recipientLocale.startsWith("el_")) {
-                targetLang = "EL";
-            } else if (toTurkish && recipientLocale.startsWith("tr_")) {
-                targetLang = "TR";
-            } else if (toIndonesian && recipientLocale.startsWith("in_")) {
-                targetLang = "ID";
-            }
-
-            String formattedMessage;
-            if (shouldTranslateFrom && shouldTranslateTo && !sourceLang.isEmpty() && !targetLang.isEmpty() && !sourceLang.equals(targetLang)) {
-                String translatedMessage = translateMessage(message, sourceLang, targetLang);
-
-                formattedMessage = CHAT_FORMAT.replace("%player%", player.getDisplayName()).replace("%message%", translatedMessage);
-            } else {
-                formattedMessage = CHAT_FORMAT.replace("%player%", player.getDisplayName()).replace("%message%", message);
-            }
-            recipient.sendMessage(formattedMessage);
+            event.setCancelled(true);
         }
-
-        event.setCancelled(true);
+        else{
+            event.setCancelled(true);
+        }
     }
 
     private ConcurrentHashMap<String, String> translationCache = new ConcurrentHashMap<>();
